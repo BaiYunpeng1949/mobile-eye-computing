@@ -1,5 +1,6 @@
-
+import Socket2PupilLabs
 
 if __name__ == '__main__':
-    pass
+    threadPupilDataReader = Socket2PupilLabs.DataReadThread()
+    threadPupilDataReader.start()
 
