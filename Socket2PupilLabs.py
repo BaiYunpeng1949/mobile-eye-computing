@@ -21,6 +21,12 @@ import json
 
 """
 To use this established data processing file, simply plug the pupil core onto a laptop/PC and run the "pupil capture.exe" on it.
+This data read socket is for demonstrating things in real time.
+
+The pupil data consists of 4 parts: eye index 0/1 * 2D/3D Model. The 2D/3D model are derived from 1 data (because their timestamp is identical).
+While the eye index 0/1 are not derived concurrently, but the time gap is quite small (say 0.0004s), which could be approximated as collected concurrently.
+The official file said the eye tracker's sampling frequency could be 200Hz. However, data sampling could not reach to the maximum value soon. It takes time.
+So when dealing with data, eliminate data in the first few seconds, the sampling rate is not right in that periods. 
 """
 
 
@@ -28,8 +34,8 @@ host = '255.255.255.255'
 port = 50000    # Randomly choose a portal.
 
 confidenceThreshold = .2
-windowLengthSeconds = 60
-maxSamplingRate = 60    # Changed to 60Hz due to our hardware limitations.
+windowLengthSeconds = 5
+maxSamplingRate = 120    # Changed to 60Hz due to our hardware limitations.
 minSamplesPerWindow = maxSamplingRate * windowLengthSeconds
 # wavelet = 'sym8'
 wavelet = 'sym16'
@@ -172,19 +178,8 @@ def cleanBlinks(data):
 def fixTimestamp(data):
     runner = 0.0
     for i in range(len(data)):
-        data[i].timestamp = runner / 60.0   # Changed this from 120 to 60
+        data[i].timestamp = runner / 120.0   # Changed this from 120 to 60
         runner += 1
-
-
-def processData(data, socket):
-    blinkedRemoved = cleanBlinks(data)
-    cleanedData = cleanup(blinkedRemoved)
-    fixTimestamp(cleanedData)
-    currentIPA = None   # TODO: fix this
-
-    valueString = ' ipa ' + str(currentIPA)
-    print(str(datetime.datetime.now()) + '  ' + valueString + '; ' + str(len(cleanedData)) + ' / ' + str(len(data)) + ' samples')
-    socket.sendto(str.encode(str(round(currentIPA, 3))), (host, port))    # Send to their equipment.
 
 
 def processData(I0data, I1data, socket):
@@ -217,43 +212,45 @@ def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram pr
             method = msg['method']
             idEye = msg['id']
 
-            # if idEye == INDEX_EYE_0:
-            #     I0data = PupilData(msg['diameter'])  # Collect the 2-D pixel data.
-            #     I0data.timestamp = msg['timestamp']
-            #     I0data.confidence = msg['confidence']
-            #
-            #     currentI0PupilData.append(I0data)
-            # elif idEye == INDEX_EYE_1:
-            #     I1data = PupilData(msg['diameter'])  # Collect the 2-D pixel data.
-            #     I1data.timestamp = msg['timestamp']
-            #     I1data.confidence = msg['confidence']
-            #
-            #     currentI1PupilData.append(I1data)
-            #
-            if method == MODE_3D and idEye == INDEX_EYE_0:
-                I0data = PupilData(msg['diameter_3d'])    # Calculate the 3-D mm model data.  Sometimes lacks this data.
+            if idEye == INDEX_EYE_0:
+                I0data = PupilData(msg['diameter'])  # Collect the 2-D pixel data.
                 I0data.timestamp = msg['timestamp']
                 I0data.confidence = msg['confidence']
 
                 currentI0PupilData.append(I0data)
-            elif method == MODE_3D and idEye == INDEX_EYE_1:
-                I1data = PupilData(
-                    msg['diameter_3d'])  # Calculate the 3-D mm model data.  Sometimes lacks this data.
+            elif idEye == INDEX_EYE_1:
+                I1data = PupilData(msg['diameter'])  # Collect the 2-D pixel data.
                 I1data.timestamp = msg['timestamp']
                 I1data.confidence = msg['confidence']
 
                 currentI1PupilData.append(I1data)
 
-            # Calculate and send out the ipa data.
-            while len(currentI0PupilData) > minSamplesPerWindow:
-                currentI0PupilData.pop(0)     # Remove the first element in the list.
-            while len(currentI1PupilData) > minSamplesPerWindow:
-                currentI1PupilData.pop(0)  # Remove the first element in the list.
+            print(len(currentI0PupilData))
 
-            if len(currentI0PupilData) == minSamplesPerWindow and len(currentI1PupilData) == minSamplesPerWindow and threadRunning is False:     # Wait for reaching 1-minute's windows length; enough data points.
-                threadRunning = True
-                processingThread = ProcessingThread(list(currentI0PupilData), list(currentI1PupilData), udp)    # Iteratively apply and start threads. TODO: make a new thread cope 2 pupils.
-                processingThread.start()
+            # if method == MODE_3D and idEye == INDEX_EYE_0:
+            #     I0data = PupilData(msg['diameter_3d'])    # Calculate the 3-D mm model data.  Sometimes lacks this data.
+            #     I0data.timestamp = msg['timestamp']
+            #     I0data.confidence = msg['confidence']
+            #
+            #     currentI0PupilData.append(I0data)
+            # elif method == MODE_3D and idEye == INDEX_EYE_1:
+            #     I1data = PupilData(
+            #         msg['diameter_3d'])  # Calculate the 3-D mm model data.  Sometimes lacks this data.
+            #     I1data.timestamp = msg['timestamp']
+            #     I1data.confidence = msg['confidence']
+            #
+            #     currentI1PupilData.append(I1data)
+
+            # # Calculate and send out the ipa data. TODO: we don't process data here, in the data collection section.
+            # while len(currentI0PupilData) > minSamplesPerWindow:
+            #     currentI0PupilData.pop(0)     # Remove the first element in the list.
+            # while len(currentI1PupilData) > minSamplesPerWindow:
+            #     currentI1PupilData.pop(0)  # Remove the first element in the list.
+            #
+            # if len(currentI0PupilData) == minSamplesPerWindow and len(currentI1PupilData) == minSamplesPerWindow and threadRunning is False:     # Wait for reaching 1-minute's windows length; enough data points.
+            #     threadRunning = True
+            #     processingThread = ProcessingThread(list(currentI0PupilData), list(currentI1PupilData), udp)    # Iteratively apply and start threads. TODO: make a new thread cope 2 pupils.
+            #     processingThread.start()
 
         except KeyboardInterrupt:
             break
