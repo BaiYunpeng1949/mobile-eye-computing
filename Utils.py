@@ -5,7 +5,7 @@ import os
 import Config
 
 
-def collectData(right2D, left2D, right3D, left3D):
+def collectData(right2D, left2D, right3D, left3D, right2DSP, left2DSP, right3DSP, left3DSP):
     now = datetime.datetime.now()
     dateString = now.strftime("%d-%m-%H-%M")
     folderPath = Config.RAW_DATA_PATH + dateString + '/'
@@ -14,10 +14,10 @@ def collectData(right2D, left2D, right3D, left3D):
     if os.path.exists(folderPath) is False:
         os.makedirs(folderPath)
 
-    write2csv(pupilDataList=right2D, filePath=folderPath + 'right2D.csv')
-    write2csv(pupilDataList=left2D, filePath=folderPath + 'left2D.csv')
-    write2csv(pupilDataList=right3D, filePath=folderPath + 'right3D.csv')
-    write2csv(pupilDataList=left3D, filePath=folderPath + 'left3D.csv')
+    write2csv(pupilDataList=right2D, filePath=folderPath + 'right2D_' + str(right2DSP) + 'Hz.csv')
+    write2csv(pupilDataList=left2D, filePath=folderPath + 'left2D_' + str(left2DSP) + 'Hz.csv')
+    write2csv(pupilDataList=right3D, filePath=folderPath + 'right3D_' + str(right3DSP) + 'Hz.csv')
+    write2csv(pupilDataList=left3D, filePath=folderPath + 'left3D_' + str(left3DSP) + 'Hz.csv')
 
 
 def write2csv(pupilDataList, filePath):

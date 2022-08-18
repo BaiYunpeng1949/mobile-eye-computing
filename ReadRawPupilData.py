@@ -46,7 +46,8 @@ MODE_3D = 'pye3d 0.3.0 real-time'
 INDEX_EYE_0 = 0
 INDEX_EYE_1 = 1
 
-global threadRunning, right2DPupilDia, left2DPupilDia, right3DPupilDia, left3DPupilDia
+global threadRunning, right2DPupilDia, left2DPupilDia, right3DPupilDia, left3DPupilDia, \
+    aveSamplRateRight2D, aveSamplRateLeft2D, aveSamplRateRight3D, aveSamplRateLeft3D
 
 
 class ProcessingThread(Thread):
@@ -204,7 +205,9 @@ def processData(I0data, I1data, socket):
 
 def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram protocol".
     try:
+        # Variable initialization:
         currentEvent = Config.EVENT_DEFAULT
+        startTime = time.time()
         while True:
             topic = pupilSocket.recv_string()
             msg = pupilSocket.recv()
@@ -259,6 +262,14 @@ def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram pr
             #     processingThread.start()
 
             if keyboard.is_pressed('esc'):
+                endTime = time.time()
+                elapsTime = endTime - startTime     # The unit should be "second"
+
+                global aveSamplRateRight2D, aveSamplRateLeft2D, aveSamplRateRight3D, aveSamplRateLeft3D
+                aveSamplRateRight2D = int(len(right2DPupilDia) / elapsTime)
+                aveSamplRateLeft2D = int(len(left2DPupilDia) / elapsTime)
+                aveSamplRateRight3D = int(len(right3DPupilDia) / elapsTime)
+                aveSamplRateLeft3D = int(len(left3DPupilDia) / elapsTime)
                 print("\nEnd the data read procedure!\n")
                 break
             elif keyboard.is_pressed(Config.KEY_SITTING):
@@ -278,7 +289,8 @@ def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram pr
 
 
 def runPupilReader():
-    global threadRunning, right2DPupilDia, left2DPupilDia, right3DPupilDia, left3DPupilDia
+    global threadRunning, right2DPupilDia, left2DPupilDia, right3DPupilDia, left3DPupilDia, \
+        aveSamplRateRight2D, aveSamplRateLeft2D, aveSamplRateRight3D, aveSamplRateLeft3D
     threadRunning = False
     right2DPupilDia = list()      # Added to apply 2 pupil analysis.
     left2DPupilDia = list()      # Distinguish between 2D and 3D model.
@@ -293,7 +305,11 @@ def runPupilReader():
     Utils.collectData(right2D=right2DPupilDia,
                       left2D=left2DPupilDia,
                       right3D=right3DPupilDia,
-                      left3D=left3DPupilDia)
+                      left3D=left3DPupilDia,
+                      right2DSP=aveSamplRateRight2D,
+                      left2DSP=aveSamplRateLeft2D,
+                      right3DSP=aveSamplRateRight3D,
+                      left3DSP=aveSamplRateLeft3D)
     print('\nWrite to local csv done...... End of the raw data collection session\n')
 
 
