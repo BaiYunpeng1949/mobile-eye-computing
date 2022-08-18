@@ -17,6 +17,7 @@ import keyboard
 import datetime
 
 from socket import *
+import Config, Utils
 import json
 
 """
@@ -45,7 +46,7 @@ MODE_3D = 'pye3d 0.3.0 real-time'
 INDEX_EYE_0 = 0
 INDEX_EYE_1 = 1
 
-global threadRunning, currentI0PupilData, currentI1PupilData
+global threadRunning, right2DPupilDia, left2DPupilDia, right3DPupilDia, left3DPupilDia
 
 
 class ProcessingThread(Thread):
@@ -201,8 +202,8 @@ def processData(I0data, I1data, socket):
 
 
 def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram protocol".
-    while True:
-        try:
+    try:
+        while True:
             topic = pupilSocket.recv_string()
             msg = pupilSocket.recv()
             msg = loads(msg, encoding='utf-8')
@@ -212,34 +213,34 @@ def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram pr
             method = msg['method']
             idEye = msg['id']
 
-            if idEye == INDEX_EYE_0:
-                I0data = PupilData(msg['diameter'])  # Collect the 2-D pixel data.
-                I0data.timestamp = msg['timestamp']
-                I0data.confidence = msg['confidence']
+            if method == MODE_2D:   # Only using the 2D model to get the pupil diameter.
+                if idEye == INDEX_EYE_0:
+                    I0data = PupilData(msg['diameter'])  # Collect the 2-D pixel data.
+                    I0data.timestamp = msg['timestamp']
+                    I0data.confidence = msg['confidence']
 
-                currentI0PupilData.append(I0data)
-            elif idEye == INDEX_EYE_1:
-                I1data = PupilData(msg['diameter'])  # Collect the 2-D pixel data.
-                I1data.timestamp = msg['timestamp']
-                I1data.confidence = msg['confidence']
+                    right2DPupilDia.append(I0data)
+                elif idEye == INDEX_EYE_1:
+                    I1data = PupilData(msg['diameter'])  # Collect the 2-D pixel data.
+                    I1data.timestamp = msg['timestamp']
+                    I1data.confidence = msg['confidence']
 
-                currentI1PupilData.append(I1data)
+                    left2DPupilDia.append(I1data)
+            elif method == MODE_3D:   # Only using the 3D model to get the pupil diameter.
+                if idEye == INDEX_EYE_0:
+                    I0data = PupilData(msg['diameter_3d'])    # Calculate the 3-D mm model data.  Sometimes lacks this data.
+                    I0data.timestamp = msg['timestamp']
+                    I0data.confidence = msg['confidence']
 
-            print(len(currentI0PupilData))
+                    right3DPupilDia.append(I0data)
+                elif idEye == INDEX_EYE_1:
+                    I1data = PupilData(
+                        msg['diameter_3d'])  # Calculate the 3-D mm model data.  Sometimes lacks this data.
+                    I1data.timestamp = msg['timestamp']
+                    I1data.confidence = msg['confidence']
 
-            # if method == MODE_3D and idEye == INDEX_EYE_0:
-            #     I0data = PupilData(msg['diameter_3d'])    # Calculate the 3-D mm model data.  Sometimes lacks this data.
-            #     I0data.timestamp = msg['timestamp']
-            #     I0data.confidence = msg['confidence']
-            #
-            #     currentI0PupilData.append(I0data)
-            # elif method == MODE_3D and idEye == INDEX_EYE_1:
-            #     I1data = PupilData(
-            #         msg['diameter_3d'])  # Calculate the 3-D mm model data.  Sometimes lacks this data.
-            #     I1data.timestamp = msg['timestamp']
-            #     I1data.confidence = msg['confidence']
-            #
-            #     currentI1PupilData.append(I1data)
+                    left3DPupilDia.append(I1data)
+                    print(I1data)
 
             # # Calculate and send out the ipa data. TODO: we don't process data here, in the data collection section.
             # while len(currentI0PupilData) > minSamplesPerWindow:
@@ -252,21 +253,31 @@ def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram pr
             #     processingThread = ProcessingThread(list(currentI0PupilData), list(currentI1PupilData), udp)    # Iteratively apply and start threads. TODO: make a new thread cope 2 pupils.
             #     processingThread.start()
 
-        except KeyboardInterrupt:
-            break
+            if keyboard.is_pressed('esc'):
+                print("\nEnd the data read procedure!\n")
+                break
+
+    except KeyboardInterrupt:
+        pass
 
 
 def runPupilReader():
-    global threadRunning, currentI0PupilData, currentI1PupilData
+    global threadRunning, right2DPupilDia, left2DPupilDia, right3DPupilDia, left3DPupilDia
     threadRunning = False
-    currentI0PupilData = list()
-    currentI1PupilData = list()     # Added to apply 2 pupil analysis.
+    right2DPupilDia = list()      # Added to apply 2 pupil analysis.
+    left2DPupilDia = list()      # Distinguish between 2D and 3D model.
+    right3DPupilDia = list()
+    left3DPupilDia = list()
 
     print(datetime.datetime.now())
     socket = createSendSocket()
     pupilSocket = createPupilConnection()  # Subscribe pupil data "Pupil Datum Format".
 
     receivePupilData(socket, pupilSocket)
+    Utils.collectData(right2D=right2DPupilDia,
+                      left2D=left2DPupilDia,
+                      right3D=right3DPupilDia,
+                      left3D=left3DPupilDia)
 
 
 class DataReadThread(Thread):
