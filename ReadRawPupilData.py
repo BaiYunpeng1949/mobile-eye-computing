@@ -67,6 +67,7 @@ class PupilData(float):
         self.X = dia
         self.timestamp = 0
         self.confidence = 0
+        self.event = Config.EVENT_DEFAULT
 
 
 def createSendSocket():
@@ -203,6 +204,7 @@ def processData(I0data, I1data, socket):
 
 def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram protocol".
     try:
+        currentEvent = Config.EVENT_DEFAULT
         while True:
             topic = pupilSocket.recv_string()
             msg = pupilSocket.recv()
@@ -218,12 +220,14 @@ def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram pr
                     I0data = PupilData(msg['diameter'])  # Collect the 2-D pixel data.
                     I0data.timestamp = msg['timestamp']
                     I0data.confidence = msg['confidence']
+                    I0data.event = currentEvent
 
                     right2DPupilDia.append(I0data)
                 elif idEye == INDEX_EYE_1:
                     I1data = PupilData(msg['diameter'])  # Collect the 2-D pixel data.
                     I1data.timestamp = msg['timestamp']
                     I1data.confidence = msg['confidence']
+                    I1data.event = currentEvent
 
                     left2DPupilDia.append(I1data)
             elif method == MODE_3D:   # Only using the 3D model to get the pupil diameter.
@@ -231,6 +235,7 @@ def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram pr
                     I0data = PupilData(msg['diameter_3d'])    # Calculate the 3-D mm model data.  Sometimes lacks this data.
                     I0data.timestamp = msg['timestamp']
                     I0data.confidence = msg['confidence']
+                    I0data.event = currentEvent
 
                     right3DPupilDia.append(I0data)
                 elif idEye == INDEX_EYE_1:
@@ -238,6 +243,7 @@ def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram pr
                         msg['diameter_3d'])  # Calculate the 3-D mm model data.  Sometimes lacks this data.
                     I1data.timestamp = msg['timestamp']
                     I1data.confidence = msg['confidence']
+                    I1data.event = currentEvent
 
                     left3DPupilDia.append(I1data)
 
@@ -255,7 +261,18 @@ def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram pr
             if keyboard.is_pressed('esc'):
                 print("\nEnd the data read procedure!\n")
                 break
-
+            elif keyboard.is_pressed(Config.KEY_SITTING):
+                currentEvent = Config.EVENT_SITTING
+                print('\nEvent changed to SITTING...\n')
+            elif keyboard.is_pressed(Config.KEY_WALKING):
+                currentEvent = Config.EVENT_WALKING
+                print('\nEvent changed to WALKING...\n')
+            elif keyboard.is_pressed(Config.KEY_READING_SITTING):
+                currentEvent = Config.EVENT_READING_SITTING
+                print('\nEvent changed to READING ANSWRGD SITTING...\n')
+            elif keyboard.is_pressed(Config.KEY_READING_WALKING):
+                currentEvent = Config.EVENT_READING_WALKING
+                print('\nEvent changed to READING AND WALKING...\n')
     except KeyboardInterrupt:
         pass
 

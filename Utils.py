@@ -35,5 +35,5 @@ def write2csv(pupilDataList, filePath):
 
         for pupilData in pupilDataList:
             # write the data
-            data = [pupilData.timestamp, pupilData.confidence, pupilData.X]
+            data = [pupilData.timestamp, pupilData.confidence, pupilData.X, pupilData.event]
             writer.writerow(data)
