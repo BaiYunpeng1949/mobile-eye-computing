@@ -240,7 +240,6 @@ def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram pr
                     I1data.confidence = msg['confidence']
 
                     left3DPupilDia.append(I1data)
-                    print(I1data)
 
             # # Calculate and send out the ipa data. TODO: we don't process data here, in the data collection section.
             # while len(currentI0PupilData) > minSamplesPerWindow:
@@ -278,6 +277,7 @@ def runPupilReader():
                       left2D=left2DPupilDia,
                       right3D=right3DPupilDia,
                       left3D=left3DPupilDia)
+    print('\nWrite to local csv done...... End of the raw data collection session\n')
 
 
 class DataReadThread(Thread):
