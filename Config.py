@@ -1,5 +1,6 @@
 # Configuration for Utils.py
 RAW_DATA_PATH = 'Data/RawData/'
+PREPROCESSED_DATA_PATH = 'Data/PreprocessedData/'
 RAW_DATA_CSV_HEADER = ['Timestamp', 'Confidence', 'Diameter', 'Event']
 
 # Configuration for ReadRawPupilData.py

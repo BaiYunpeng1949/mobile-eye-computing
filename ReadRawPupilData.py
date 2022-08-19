@@ -262,10 +262,10 @@ def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram pr
             #     processingThread.start()
 
             if keyboard.is_pressed('esc'):
+                global aveSamplRateRight2D, aveSamplRateLeft2D, aveSamplRateRight3D, aveSamplRateLeft3D
                 endTime = time.time()
                 elapsTime = endTime - startTime     # The unit should be "second"
 
-                global aveSamplRateRight2D, aveSamplRateLeft2D, aveSamplRateRight3D, aveSamplRateLeft3D
                 aveSamplRateRight2D = int(len(right2DPupilDia) / elapsTime)
                 aveSamplRateLeft2D = int(len(left2DPupilDia) / elapsTime)
                 aveSamplRateRight3D = int(len(right3DPupilDia) / elapsTime)

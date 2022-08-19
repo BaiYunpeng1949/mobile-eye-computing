@@ -9,10 +9,13 @@ def collectData(right2D, left2D, right3D, left3D, right2DSP, left2DSP, right3DSP
     now = datetime.datetime.now()
     dateString = now.strftime("%d-%m-%H-%M")
     folderPath = Config.RAW_DATA_PATH + dateString + '/'
+    folderPathPreproData = Config.PREPROCESSED_DATA_PATH + dateString + '/'
 
     # Check the existence of the folder. If not, create one.
     if os.path.exists(folderPath) is False:
         os.makedirs(folderPath)
+    if os.path.exists(folderPathPreproData) is False:
+        os.makedirs(folderPathPreproData)
 
     write2csv(pupilDataList=right2D, filePath=folderPath + 'right2D_' + str(right2DSP) + 'Hz.csv')
     write2csv(pupilDataList=left2D, filePath=folderPath + 'left2D_' + str(left2DSP) + 'Hz.csv')
