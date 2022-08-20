@@ -181,7 +181,7 @@ def cleanBlinks(data):
 def fixTimestamp(data):
     runner = 0.0
     for i in range(len(data)):
-        data[i].timestamp = runner / 120.0   # Changed this from 120 to 60
+        data[i].timestamp = runner / 120.0
         runner += 1
 
 
