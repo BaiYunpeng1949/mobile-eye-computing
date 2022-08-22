@@ -47,7 +47,8 @@ INDEX_EYE_0 = 0
 INDEX_EYE_1 = 1
 
 global threadRunning, right2DPupilDia, left2DPupilDia, right3DPupilDia, left3DPupilDia, \
-    aveSamplRateRight2D, aveSamplRateLeft2D, aveSamplRateRight3D, aveSamplRateLeft3D
+    aveSamplRateRight2D, aveSamplRateLeft2D, aveSamplRateRight3D, aveSamplRateLeft3D, \
+    conditions
 
 
 class ProcessingThread(Thread):
@@ -290,7 +291,9 @@ def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram pr
 
 def runPupilReader():
     global threadRunning, right2DPupilDia, left2DPupilDia, right3DPupilDia, left3DPupilDia, \
-        aveSamplRateRight2D, aveSamplRateLeft2D, aveSamplRateRight3D, aveSamplRateLeft3D
+        aveSamplRateRight2D, aveSamplRateLeft2D, aveSamplRateRight3D, aveSamplRateLeft3D, \
+        conditions
+
     threadRunning = False
     right2DPupilDia = list()      # Added to apply 2 pupil analysis.
     left2DPupilDia = list()      # Distinguish between 2D and 3D model.
@@ -309,13 +312,16 @@ def runPupilReader():
                       right2DSP=aveSamplRateRight2D,
                       left2DSP=aveSamplRateLeft2D,
                       right3DSP=aveSamplRateRight3D,
-                      left3DSP=aveSamplRateLeft3D)
+                      left3DSP=aveSamplRateLeft3D,
+                      conditions=conditions)
     print('\nWrite to local csv done...... End of the raw data collection session\n')
 
 
 class DataReadThread(Thread):
-    def __int__(self):
+    def __init__(self, setting):
         Thread.__init__(self)
+        global conditions
+        conditions = setting
 
     def run(self):
         runPupilReader()

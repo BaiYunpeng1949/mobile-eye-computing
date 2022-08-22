@@ -5,11 +5,11 @@ import os
 import Config
 
 
-def collectData(right2D, left2D, right3D, left3D, right2DSP, left2DSP, right3DSP, left3DSP):
+def collectData(right2D, left2D, right3D, left3D, right2DSP, left2DSP, right3DSP, left3DSP, conditions):
     now = datetime.datetime.now()
-    dateString = now.strftime("%d-%m-%H-%M")
-    folderPath = Config.RAW_DATA_PATH + dateString + '/'
-    folderPathPreproData = Config.PREPROCESSED_DATA_PATH + dateString + '/'
+    conditionString = now.strftime("%d-%m-%H-%M") + conditions
+    folderPath = Config.RAW_DATA_PATH + conditionString + '/'
+    folderPathPreproData = Config.PREPROCESSED_DATA_PATH + conditionString + '/'
 
     # Check the existence of the folder. If not, create one.
     if os.path.exists(folderPath) is False:
