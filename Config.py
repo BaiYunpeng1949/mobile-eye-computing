@@ -16,6 +16,7 @@ KEY_READING_SITTING = 'r'
 KEY_READING_WALKING = 'g'
 
 # Configuration for main.py
+# Mobile and reading
 WALK_SIMPATH = 'walk_simpath'
 WALK_STAIRPATH = 'walk_stairpath'
 STAND = 'stand'
@@ -23,3 +24,14 @@ STAND = 'stand'
 HARD = 'hard'
 EASY = 'easy'
 NOREAD = 'noread'
+
+# N-BACK audio: https://dualn-back.com/
+NOBACK = 'nothing'
+ONEBACK ='ONEBACK'
+TWOBACK = 'TWOBACK'
+
+# Luminance condition
+LOWLUX = 'lowlux'
+MIDDLELUX = 'middlelux'
+HIGHLUX = 'highlux'
+
