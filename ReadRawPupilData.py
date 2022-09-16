@@ -225,30 +225,26 @@ def receivePupilData(udp, pupilSocket):     # The "udp" is for "user datagram pr
                     I0data.timestamp = msg['timestamp']
                     I0data.confidence = msg['confidence']
                     I0data.event = currentEvent
-
                     right2DPupilDia.append(I0data)
                 elif idEye == INDEX_EYE_1:
                     I1data = PupilData(msg['diameter'])  # Collect the 2-D pixel data.
                     I1data.timestamp = msg['timestamp']
                     I1data.confidence = msg['confidence']
                     I1data.event = currentEvent
-
                     left2DPupilDia.append(I1data)
+
             elif method == MODE_3D:   # Only using the 3D model to get the pupil diameter.
                 if idEye == INDEX_EYE_0:
                     I0data = PupilData(msg['diameter_3d'])    # Calculate the 3-D mm model data.  Sometimes lacks this data.
                     I0data.timestamp = msg['timestamp']
                     I0data.confidence = msg['confidence']
                     I0data.event = currentEvent
-
                     right3DPupilDia.append(I0data)
                 elif idEye == INDEX_EYE_1:
-                    I1data = PupilData(
-                        msg['diameter_3d'])  # Calculate the 3-D mm model data.  Sometimes lacks this data.
+                    I1data = PupilData(msg['diameter_3d'])  # Calculate the 3-D mm model data.  Sometimes lacks this data.
                     I1data.timestamp = msg['timestamp']
                     I1data.confidence = msg['confidence']
                     I1data.event = currentEvent
-
                     left3DPupilDia.append(I1data)
 
             # # Calculate and send out the ipa data. TODO: we don't process data here, in the data collection section.
