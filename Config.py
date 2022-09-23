@@ -29,6 +29,7 @@ NOREAD = 'noread'
 NOBACK = 'nothing'
 ONEBACK ='ONEBACK'
 TWOBACK = 'TWOBACK'
+THREEBACK = 'THREEBACK'
 
 # Luminance condition
 LOWLUX = 'lowlux'
