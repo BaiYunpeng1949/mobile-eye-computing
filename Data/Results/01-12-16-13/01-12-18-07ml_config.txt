@@ -1,0 +1,104 @@
+Split Mode:  Inclusive
+Validated PID:  10
+Blinking Rate Threshold:  1.0
+Random Forest Depth:  10
+----------------- Model Performances --------------------
+
+The Random Forest accuracy is: 0.7074010327022375
+The Random Forest F1 is: 0.6806797266189282
+
+
+
+The XGBoost accuracy is: 0.9931153184165232
+The XGBoost F1 is: 0.9932895572055089
+
+
+
+The indices of selected features are: 
+['Mean Right']
+
+
+
+The Random Forest accuracy is: 1.0
+The Random Forest F1 is: 1.0
+
+
+
+The XGBoost accuracy is: 1.0
+The XGBoost F1 is: 1.0
+
+
+
+The Random Forest accuracy is: 0.7177280550774526
+The Random Forest F1 is: 0.6928504819523975
+
+
+
+The XGBoost accuracy is: 0.9896729776247849
+The XGBoost F1 is: 0.9901441437745123
+
+
+
+The indices of selected features are: 
+['Averaged Diameter', 'Difference Diameter', 'Mean Left', 'Mean Right', 'MAX Right', 'Med Left', 'Med Right']
+
+
+
+The Random Forest accuracy is: 0.7986230636833046
+The Random Forest F1 is: 0.7909060648040241
+
+
+
+The XGBoost accuracy is: 0.9862306368330465
+The XGBoost F1 is: 0.9869947839832531
+
+
+
+The Random Forest accuracy is: 0.5438898450946644
+The Random Forest F1 is: 0.532871942643477
+
+
+
+The XGBoost accuracy is: 0.9896729776247849
+The XGBoost F1 is: 0.9901441437745123
+
+
+
+The indices of selected features are: 
+['Left-0', 'Left-2', 'Left-3', 'Left-4', 'Left-7', 'Left-22', 'Left-23', 'Left-24', 'Left-28', 'Left-30', 'Left-31', 'Left-38', 'Left-86', 'Left-90', 'Left-92', 'Left-94', 'Left-95', 'Left-96', 'Left-102', 'Left-114', 'Left-121', 'Left-122', 'Left-124', 'Left-126', 'Left-140', 'Left-141', 'Left-142', 'Left-143', 'Left-144', 'Left-145', 'Left-146', 'Left-147', 'Left-148', 'Left-149', 'Right-0', 'Right-8', 'Right-129', 'Right-141', 'Right-144', 'Right-148', 'Right-149', 'Averaged Diameter', 'Difference Diameter', 'Mean Left', 'Mean Right', 'MAX Left', 'MAX Right', 'STD Left', 'STD Right', 'Skew Left', 'Skew Right', 'Med Left', 'Med Right', 'Var Left', 'Var Right']
+
+
+
+The Random Forest accuracy is: 0.6695352839931153
+The Random Forest F1 is: 0.6505559637701721
+
+
+
+The XGBoost accuracy is: 0.9913941480206541
+The XGBoost F1 is: 0.9912841404103432
+
+
+
+The Random Forest accuracy is: 0.5524956970740104
+The Random Forest F1 is: 0.5380907827018659
+
+
+
+The XGBoost accuracy is: 0.9913941480206541
+The XGBoost F1 is: 0.9912841404103432
+
+
+
+The indices of selected features are: 
+['Left-0', 'Left-11', 'Left-17', 'Left-25', 'Left-26', 'Left-32', 'Left-33', 'Left-37', 'Left-38', 'Left-55', 'Left-80', 'Left-84', 'Left-90', 'Left-92', 'Left-93', 'Left-116', 'Left-122', 'Left-139', 'Left-140', 'Left-141', 'Left-143', 'Left-144', 'Left-145', 'Left-146', 'Left-147', 'Left-148', 'Left-149', 'Right-0', 'Right-2', 'Right-5', 'Right-6', 'Right-41', 'Right-133', 'Right-139', 'Right-140', 'Right-143', 'Right-148', 'LHIPA Left', 'LHIPA Right', 'Averaged Diameter', 'Difference Diameter', 'Mean Left', 'Mean Right', 'MAX Left', 'MAX Right', 'STD Left', 'STD Right', 'Skew Left', 'Skew Right', 'Med Left', 'Med Right', 'Var Left', 'Var Right']
+
+
+
+The Random Forest accuracy is: 0.657487091222031
+The Random Forest F1 is: 0.6374412316997795
+
+
+
+The XGBoost accuracy is: 0.9896729776247849
+The XGBoost F1 is: 0.9901441437745123
+
