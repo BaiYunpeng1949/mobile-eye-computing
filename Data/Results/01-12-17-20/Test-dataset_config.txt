@@ -1,0 +1,7 @@
+Source File Name:  ../Data/RawData4ML/Test/
+Time Window Length (s):  5.0
+Overlapped Length (s):  3.0
+Testing Percentage:  0.1
+Validation Percentage:  0.1
+Feature Dimension (Including labels):  332
+Instances Dimension:  188
