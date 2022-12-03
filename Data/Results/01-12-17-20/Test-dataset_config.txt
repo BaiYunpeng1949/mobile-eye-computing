@@ -1,7 +1,3 @@
-Source File Name:  ../Data/RawData4ML/Test/
-Time Window Length (s):  5.0
-Overlapped Length (s):  3.0
-Testing Percentage:  0.1
-Validation Percentage:  0.1
-Feature Dimension (Including labels):  332
-Instances Dimension:  188
+version https://git-lfs.github.com/spec/v1
+oid sha256:8f98a56daaee48e4f570fb6e63dedbb18740a62f845bfef17ad9b3f9dd400f1b
+size 230
